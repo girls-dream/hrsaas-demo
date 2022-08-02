@@ -75,6 +75,7 @@ export default {
     }
   },
   methods:{
+    // 登录
     async handleLogin(){
       // this.$refs.loginForm.validate((valid,errname)=>{
       //   console.log(valid);
