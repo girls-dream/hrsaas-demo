@@ -74,6 +74,7 @@
     .el-submenu__title {
       &:hover {
         background-color: $menuHover !important;
+        // color:#409eff
       }
     }
 
@@ -200,8 +201,9 @@
   .nest-menu .el-submenu > .el-submenu__title,
   .el-menu-item {
     &:hover {
-      // you can use $subMenuHover
-      background-color: $menuHover !important;
+      color: #fff;
+      // you can use $subMenuHovermenuHover
+      background-color: $subMenuHover !important;
     }
   }
 

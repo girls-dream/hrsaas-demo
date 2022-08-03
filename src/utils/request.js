@@ -7,7 +7,7 @@ import router from '@/router'
 function isTimeOut() {
   // const currentTime = Date.now()
   // const tokenTime = getTokenTime()
-  const timeOut = 99999999
+  const timeOut = 9999999999999
   // 当前时间-获取token时间
   return !!(Date.now() - getTokenTime() > timeOut)
 }
@@ -18,6 +18,7 @@ const service = axios.create({
 }) // 创建一个axios的实例
 // 请求拦截器
 service.interceptors.request.use(async (config) => {
+  
   if (store.state.user.token) {
     if (isTimeOut()) {
       // 判断token是否过期 过期的话 跳到登录页

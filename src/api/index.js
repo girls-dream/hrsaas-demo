@@ -1,1 +1,6 @@
 export * from './user'
+export * from './approvals'
+export * from './attendances'
+export * from './common'
+export * from './salarys'
+export * from './social'
