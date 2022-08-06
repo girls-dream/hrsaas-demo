@@ -35,7 +35,7 @@ service.interceptors.request.use(async (config) => {
 // 响应拦截器
 service.interceptors.response.use(
   (res) => {
-    console.log(res)
+    // console.log(res)
     const { success, data, message } = res.data
     if (success) {
       return data

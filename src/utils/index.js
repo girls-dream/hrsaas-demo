@@ -115,3 +115,19 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+
+export function totree(data,pid) {
+  const arr = []
+  data.forEach((item) => {
+    if (item.pid === pid) {
+      const child = totree(data, item.id)
+      if (child.length) {
+        item.children = child
+      }
+      arr.push(item)
+    }
+  })
+  return arr
+}
+// const tree = totree(data, pid)
