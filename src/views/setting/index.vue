@@ -62,18 +62,57 @@
             <el-button type="primary" @click="onAddRole">确 定</el-button>
           </span>
         </el-dialog>
-        <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+        <el-tab-pane label="配置管理" name="second">
+          <el-alert
+            title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改"
+            type="info"
+            show-icon
+            :closable="false"
+          />
+          <el-form label-width="120px" style="margin-top: 50px">
+            <el-form-item label="公司名称">
+              <el-input
+                v-model="companyInfo.name"
+                disabled
+                style="width: 400px"
+              />
+            </el-form-item>
+            <el-form-item label="公司地址">
+              <el-input
+                v-model="companyInfo.companyAddress"
+                disabled
+                style="width: 400px"
+              />
+            </el-form-item>
+            <el-form-item label="邮箱">
+              <el-input
+                v-model="companyInfo.mailbox"
+                disabled
+                style="width: 400px"
+              />
+            </el-form-item>
+            <el-form-item label="备注">
+              <el-input
+                v-model="companyInfo.remarks"
+                type="textarea"
+                :rows="3"
+                disabled
+                style="width: 400px"
+              />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import { getRolesApi, addRolesApi } from '@/api'
+import { getRolesApi, addRolesApi, getCompanyInfo } from '@/api'
 export default {
   data() {
     return {
-      activeName: 'first', //标签页高亮
+      activeName: 'second', //标签页高亮
       tableData: [],
       pageSize: 2,
       total: 0,
@@ -86,11 +125,13 @@ export default {
       addRoleFromRules: {
         name: [{ required: true, message: '请填写部门名称', trigger: 'blur' }],
       },
+      companyInfo: {},
     }
   },
 
   created() {
     this.getRoles()
+    this.getCompany()
   },
 
   methods: {
@@ -130,6 +171,13 @@ export default {
     dialogvisible() {
       this.$refs.form.resetFields()
       this.addRoleFrom.description = ''
+    },
+    async getCompany() {
+      const res = await getCompanyInfo(
+        this.$store.state.user.userInfo.companyId,
+      )
+      console.log(res)
+      this.companyInfo = res
     },
   },
 }
