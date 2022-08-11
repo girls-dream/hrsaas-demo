@@ -24,6 +24,9 @@ import * as direcitive from '@/directives'
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
+import components from '@/components'
+Vue.use(components)
+
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
