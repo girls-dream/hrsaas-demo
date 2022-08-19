@@ -1,4 +1,7 @@
 import PageTools from '@/components/PageTools'
+import UploadExel from '@/components/UpdateExel'
+import UploadImg from '@/components/UploadImg'
+
 // console.log(PageTools);
 //第一种方式
 // export default {
@@ -8,7 +11,7 @@ import PageTools from '@/components/PageTools'
 // }
 
 // 第二种方法
-const components = [PageTools]
+const components = [PageTools, UploadExel, UploadImg]
 export default {
   install(Vue) {
     components.forEach((component) => {

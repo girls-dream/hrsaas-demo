@@ -21,3 +21,14 @@ export const userAllInfo = (id) => {
     url: `/sys/user/${id}`,
   })
 }
+
+/** *
+ *  更新用户详情的基础信息
+ * **/
+export function saveUserDetailById(data) {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'put',
+    data,
+  })
+}

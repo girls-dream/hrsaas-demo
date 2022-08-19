@@ -1,6 +1,9 @@
 <template>
   <div>
-    首页
+    <i
+      @click="$router.push('/employees/printer?type=job')"
+      class="el-icon-printer"
+    ></i>
   </div>
 </template>
 
@@ -14,9 +17,7 @@ export default {
 
   created() {},
 
-  methods: {
-    
-  },
+  methods: {},
 
   components: {},
 

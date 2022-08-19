@@ -14,6 +14,7 @@ import attendancesRouter from './modules/attendances'
 import salarysRouter from './modules/salarys'
 import settingRouter from './modules/setting'
 import socialRouter from './modules/social'
+import importModules from './modules/import'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -79,7 +80,8 @@ export const asyncRoutes = [
   attendancesRouter,
   salarysRouter,
   settingRouter,
-  socialRouter
+  socialRouter,
+  importModules,
 ]
 
 const createRouter = () =>

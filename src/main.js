@@ -16,6 +16,21 @@ import '@/icons' // icon
 import '@/permission' // permission control
 // 自定义指令
 import * as direcitive from '@/directives'
+for (let key in direcitive) {
+  Vue.directive(key, direcitive[key])
+}
+
+// 打印自定义指令
+import Print from 'vue-print-nb'
+Vue.use(Print);
+
+
+// 过滤器封装
+import * as filters from '@/filter'
+// 统一注册过滤器
+for (let key in filters) {
+  Vue.filter(key, filters[key])
+}
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -24,8 +39,10 @@ import * as direcitive from '@/directives'
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
+
 import components from '@/components'
 Vue.use(components)
+
 
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
@@ -38,10 +55,6 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-
-for (let key in direcitive) {
-  Vue.directive(key, direcitive[key])
-}
 
 new Vue({
   el: '#app',
