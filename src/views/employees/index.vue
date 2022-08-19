@@ -64,7 +64,9 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="showAssigen(row)"
+                >角色</el-button
+              >
               <el-button
                 type="text"
                 size="small"
@@ -97,6 +99,11 @@
     </div>
     <!-- 添加员工组件 -->
     <AddEmployees :visible.sync="showVisible"></AddEmployees>
+    <!-- 角色分配 -->
+    <AssignRole
+      :employeesId="currentEmployeesId"
+      :visible.sync="showAssigenRole"
+    ></AssignRole>
   </div>
 </template>
 
@@ -104,9 +111,14 @@
 import { getEmployeesInfo, delEmployee } from '@/api'
 import employees from '@/constant/employees.js'
 import AddEmployees from './components/add-employees.vue'
+import AssignRole from './components/assign-role.vue'
 const { exportExcelMapPath, hireType } = employees
 import QRcode from 'qrcode'
 export default {
+  components: {
+    AddEmployees,
+    AssignRole,
+  },
   data() {
     return {
       employees: [],
@@ -117,6 +129,8 @@ export default {
       },
       showVisible: false,
       ercodeDialog: false,
+      showAssigenRole: false,
+      currentEmployeesId: '',
     }
   },
 
@@ -125,15 +139,18 @@ export default {
   },
 
   methods: {
+    // 获取数据
     async getEmployees() {
       const { rows, total } = await getEmployeesInfo(this.pages)
       this.employees = rows
       this.total = total
     },
+    // 当前页
     currentChange(val) {
       this.pages.page = val
       this.getEmployees()
     },
+    // 判断聘用形式
     formatFormOfEmployment(row, colum, cellValue, index) {
       const finditem = employees.hireType.find((item) => item.id === cellValue)
       return finditem ? finditem.value : '未知'
@@ -184,17 +201,21 @@ export default {
         merges: ['A1:A2', 'B1:F1', 'G2:G2'],
       })
     },
+    // 二维码
     showErCodeDialog(staffPhoto) {
       if (!staffPhoto) return this.$message.error('该用户还未设置头像')
       this.ercodeDialog = true
-      this.$nextTick(()=>{
-        const canvas=document.getElementById('canvas')
-        QRcode.toCanvas(canvas,staffPhoto)
+      this.$nextTick(() => {
+        const canvas = document.getElementById('canvas')
+        QRcode.toCanvas(canvas, staffPhoto)
       })
     },
-  },
-  components: {
-    AddEmployees,
+    // 分配角色
+    showAssigen(row) {
+      // console.log(row)
+      this.currentEmployeesId = row.id
+      this.showAssigenRole = true
+    },
   },
 }
 </script>

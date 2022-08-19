@@ -21,7 +21,9 @@
             <el-table-column prop="description" label="描述"> </el-table-column>
             <el-table-column label="操作">
               <template>
-                <el-button size="small" type="success">分配权限</el-button>
+                <el-button size="small" type="success" @click="showRightsDialog"
+                  >分配权限</el-button
+                >
                 <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger">删除</el-button>
               </template>
@@ -104,15 +106,36 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+    <!-- 添加角色权限弹层 -->
+    <el-dialog title="给角色分配权限" :visible.sync="assignDialog" width="50%">
+      <el-tree
+        :data="perssions"
+        show-checkbox
+        :props="{ label: 'name' }"
+        :default-checked-keys="defaultCheckKeys"
+        default-expand-all
+        node-key="id"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="assignDialog = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRolesApi, addRolesApi, getCompanyInfo } from '@/api'
+import {
+  getRolesApi,
+  addRolesApi,
+  getCompanyInfo,
+  getPermissionList,
+} from '@/api'
+import { totree } from '@/utils'
 export default {
   data() {
     return {
-      activeName: 'second', //标签页高亮
+      activeName: 'first', //标签页高亮
       tableData: [],
       pageSize: 2,
       total: 0,
@@ -126,6 +149,9 @@ export default {
         name: [{ required: true, message: '请填写部门名称', trigger: 'blur' }],
       },
       companyInfo: {},
+      assignDialog: false,
+      perssions: [], //分配权限
+      defaultCheckKeys: ['1', '1063313020819738624'],
     }
   },
 
@@ -136,7 +162,7 @@ export default {
 
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event)
+      // console.log(tab, event)
     },
     async getRoles() {
       const { rows, total } = await getRolesApi({
@@ -176,8 +202,18 @@ export default {
       const res = await getCompanyInfo(
         this.$store.state.user.userInfo.companyId,
       )
-      console.log(res)
+      // console.log(res)
       this.companyInfo = res
+    },
+    showRightsDialog() {
+      this.assignDialog = true
+      this.getPermissions()
+    },
+    async getPermissions() {
+      const res = await getPermissionList()
+      const treePermission = totree(res, '0')
+      console.log(treePermission)
+      this.perssions = treePermission
     },
   },
 }
