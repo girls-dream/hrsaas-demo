@@ -20,8 +20,12 @@
             <el-table-column prop="name" label="角色"> </el-table-column>
             <el-table-column prop="description" label="描述"> </el-table-column>
             <el-table-column label="操作">
-              <template>
-                <el-button size="small" type="success" @click="showRightsDialog"
+              <template slot-scope="{ row }">
+                <el-button
+                  v-if="isHas(point.roles.add)"
+                  size="small"
+                  type="success"
+                  @click="showRightsDialog(row.id)"
                   >分配权限</el-button
                 >
                 <el-button size="small" type="primary">编辑</el-button>
@@ -107,7 +111,13 @@
       </el-tabs>
     </div>
     <!-- 添加角色权限弹层 -->
-    <el-dialog title="给角色分配权限" :visible.sync="assignDialog" width="50%">
+    <el-dialog
+      @close="setRightsDialog"
+      title="给角色分配权限"
+      :visible.sync="assignDialog"
+      width="50%"
+      destory_on_close
+    >
       <el-tree
         :data="perssions"
         show-checkbox
@@ -115,10 +125,11 @@
         :default-checked-keys="defaultCheckKeys"
         default-expand-all
         node-key="id"
+        ref="preTree"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="assignDialog = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="onSaveRights">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -130,7 +141,11 @@ import {
   addRolesApi,
   getCompanyInfo,
   getPermissionList,
+  getRolesInfo,
+  assignPerm,
 } from '@/api'
+// import permissionPoint from '@/constant/permission'
+import mixinPermissionPoint from '@/mixins/permission'
 import { totree } from '@/utils'
 export default {
   data() {
@@ -152,13 +167,23 @@ export default {
       assignDialog: false,
       perssions: [], //分配权限
       defaultCheckKeys: ['1', '1063313020819738624'],
+      roleId: '',
     }
   },
 
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+  },
   created() {
     this.getRoles()
     this.getCompany()
+    // console.log(this.$attr);
   },
+
+  mixins: [mixinPermissionPoint],
 
   methods: {
     handleClick(tab, event) {
@@ -205,15 +230,32 @@ export default {
       // console.log(res)
       this.companyInfo = res
     },
-    showRightsDialog() {
+    async showRightsDialog(id) {
+      this.roleId = id
       this.assignDialog = true
+      const res = await getRolesInfo(id)
+      this.defaultCheckKeys = res.permIds
       this.getPermissions()
     },
     async getPermissions() {
       const res = await getPermissionList()
       const treePermission = totree(res, '0')
-      console.log(treePermission)
+      // console.log(treePermission)
       this.perssions = treePermission
+    },
+    // 监听设置对话框关闭
+    setRightsDialog() {
+      this.defaultCheckKeys = []
+    },
+    // 保存权限分配
+    async onSaveRights() {
+      // console.log(this.RoleId)
+      const res = await assignPerm({
+        id: this.roleId,
+        permIds: this.$refs.preTree.getCheckedKeys(),
+      })
+      this.$message.success('分配成功')
+      this.assignDialog = false
     },
   },
 }

@@ -1,5 +1,6 @@
 import { login, getUserInfo, userAllInfo } from '@/api'
-import {setTokenTime} from '@/utils/auth'
+import { setTokenTime } from '@/utils/auth'
+import { resetRouter } from '@/router'
 export default {
   namespaced: true,
   state: {
@@ -29,11 +30,14 @@ export default {
       // console.log(userInfo) //员工信息
       // console.log(userInbaseInfo) //员工基本信息
       commit('setUserInfo', { ...userInfo, ...userInbaseInfo })
+      return userInfo
     },
     // 退出
-    logout({commit}) {
+    logout({ commit }) {
       commit('setToken', '')
-      commit('setUserInfo',{})
-    }
+      commit('setUserInfo', {})
+      resetRouter()
+      commit('permission/setRoutes', [], { root: true })
+    },
   },
 }

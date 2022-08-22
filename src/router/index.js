@@ -68,7 +68,6 @@ export const constantRoutes = [
     ],
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
 ]
 
 // 动态路由:准备好项目所有动态路由基于后端返回的用户权限对动态路由
@@ -88,7 +87,7 @@ const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
-    routes: [...constantRoutes, ...asyncRoutes],
+    routes: [...constantRoutes],
   })
 
 const router = createRouter()

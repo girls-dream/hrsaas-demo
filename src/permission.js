@@ -1,9 +1,10 @@
-import router from '@/router'
+import router, { asyncRoutes } from '@/router'
 import store from '@/store'
+import { RouterLinkStub } from '@vue/test-utils'
 // 路由(全局)前置守卫
 // 会在所有路由进入之前触发
 const whiteList = ['/login', '404']
-router.beforeEach(async(to, form, next) => {
+router.beforeEach(async (to, form, next) => {
   const token = store.state.user.token
   // console.log(token)
   if (token) {
@@ -11,7 +12,11 @@ router.beforeEach(async(to, form, next) => {
     // 判断当前在登陆页面 有token的话回不去登陆页面
     if (!store.state.user.userInfo.userId) {
       //判断首页有没有用户id有的话切换路由时不发送请求
-      await store.dispatch('user/getUserInfo')
+      const { roles } = await store.dispatch('user/getUserInfo')
+      // console.log(roles)
+      await store.dispatch('permission/filterRoutes', roles)
+      await store.dispatch('permission/setPointsAction', roles)
+      next(to.path)
     }
     if (to.path === '/login') return next('/')
     next()

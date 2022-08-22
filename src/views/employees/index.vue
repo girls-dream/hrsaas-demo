@@ -9,8 +9,19 @@
           <el-button size="small" type="warning" @click="importModules"
             >导入</el-button
           >
-          <el-button size="small" type="danger" @click="educe">导出</el-button>
-          <el-button size="small" type="primary" @click="showVisible = true"
+          <!-- v-if="isHas('employees-export')" -->
+          <el-button
+            size="small"
+            type="danger"
+            @click="educe"
+            v-isHas="point.employees.import"
+            >导出</el-button
+          >
+          <el-button
+            v-if="point.employees.add"
+            size="small"
+            type="primary"
+            @click="showVisible = true"
             >新增员工</el-button
           >
         </template>
@@ -112,8 +123,11 @@ import { getEmployeesInfo, delEmployee } from '@/api'
 import employees from '@/constant/employees.js'
 import AddEmployees from './components/add-employees.vue'
 import AssignRole from './components/assign-role.vue'
+import permissionPoint from '@/constant/permission'
 const { exportExcelMapPath, hireType } = employees
 import QRcode from 'qrcode'
+// import '@/directives'
+
 export default {
   components: {
     AddEmployees,
@@ -131,6 +145,7 @@ export default {
       ercodeDialog: false,
       showAssigenRole: false,
       currentEmployeesId: '',
+      point: permissionPoint,
     }
   },
 
@@ -215,6 +230,9 @@ export default {
       // console.log(row)
       this.currentEmployeesId = row.id
       this.showAssigenRole = true
+    },
+    isHas(point) {
+      return this.$store.state.permission.points.includes(point)
     },
   },
 }
