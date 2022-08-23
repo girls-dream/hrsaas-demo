@@ -1,6 +1,9 @@
 import PageTools from '@/components/PageTools'
 import UploadExel from '@/components/UpdateExel'
 import UploadImg from '@/components/UploadImg'
+import Calendar from '@/components/Calendar'
+import FullScreen from '@/components/FullScreen'
+import ToggleLang from '@/components/ToggleLang'
 
 // console.log(PageTools);
 //第一种方式
@@ -11,7 +14,14 @@ import UploadImg from '@/components/UploadImg'
 // }
 
 // 第二种方法
-const components = [PageTools, UploadExel, UploadImg]
+const components = [
+  PageTools,
+  UploadExel,
+  UploadImg,
+  Calendar,
+  FullScreen,
+  ToggleLang,
+]
 export default {
   install(Vue) {
     components.forEach((component) => {

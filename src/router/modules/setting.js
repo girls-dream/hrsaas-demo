@@ -9,6 +9,8 @@ export default {
     {
       path: '',
       component: () => import('@/views/setting'),
+      name: '公司设置',
+
       meta: { title: '公司设置', icon: 'setting' }
     }
   ]
